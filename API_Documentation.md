@@ -29,10 +29,12 @@
 | GET | /api/products/:id | [Get product](#Get-product) |
 | PATCH | /api/products/:id | [Update product](#Update-product) |
 | DELETE | /api/products/:id | [Delete product](#Delete-product) |
-| POST | /api/warehouse/import | [Import warehouse](#Import-warehouse) |
-| GET | /api/warehouse/import | [Get list of import warehouse](#Get-list-of-import-warehouse) |
-| POST | /api/warehouse/export | [Export warehouse](#Export-warehouse) |
-| GET | /api/warehouse/export | [Get list of export warehouse](#Get-list-of-export-warehouse) |
+| POST | /api/bills/import | [Create import bills](#Create-import-bills) |
+| GET | /api/bills/import | [Get list of import bills](#Get-list-of-import-bills) |
+| POST | /api/bills/export | [Create export bills](#Create-export-bills) |
+| GET | /api/bills/export | [Get list of export bills](#Get-list-of-export-bills) |
+| GET | /api/warehouses/import | [Get list of import warehouse](#Get-list-of-import-warehouse) |
+| GET | /api/warehouses/export | [Get list of export warehouse](#Get-list-of-export-warehouse) |
 
 ## Authentication
 
@@ -464,7 +466,8 @@
 	```json
 	{
 		"name": "ABC",
-		"supplierId": "supplier-id"
+		"supplierId": "supplier-id",
+		"price": 200000
 	}
 	```
 - Response:
@@ -477,14 +480,21 @@
 				name: "ABC",
 				supplierId: "supplier-id",
 				supplierName: "ABC",
+				price: 200000,
 			},
 		},
 		```
 	- 400:
 		```ts
 		data: {
-			message: "Please provide name and supplierId",
+			message: "Please provide name and supplierId and price",
 		},
+		```
+		or
+		```ts
+		data: {
+			message: "Price must be greater than or equal to 0"
+		}
 		```
 	- 401:
 		```ts
@@ -534,6 +544,10 @@
 		- Optional
 		- Filter by max amount
 		- Default: no limit
+	- min_amount: number
+		- Optional
+		- Filter by min amount
+		- Default: no limit
 - Response:
 	- 200:
 		```ts
@@ -545,6 +559,7 @@
 					name: "ABC",
 					supplierId: "supplier-id",
 					supplierName: "ABC",
+					price: 200000,
 					amount: 0,
 				},
 				{
@@ -552,6 +567,7 @@
 					name: "ABC",
 					supplierId: "supplier-id",
 					supplierName: "ABC",
+					price: 200000,
 					amount: 0,
 				},
 			],
@@ -602,6 +618,7 @@
 				name: "ABC",
 				supplierId: "supplier-id",
 				supplierName: "ABC",
+				price: 200000,
 				amount: 0,
 			},
 		},
@@ -632,6 +649,7 @@
 - URL: https://quan-ly-kho-api.vercel.app/api/products/product-id
 - Method: PATCH
 - Header: Authorization: Bearer token-string
+- *Note*: Only pass changed fields to body
 - Body:
 	```json
 	{
@@ -651,11 +669,23 @@
 		"supplierId": "supplier-id"
 	}
 	```
+	or
+	```json
+	{
+		"price": 200000
+	}
+	```
 - Response:
 	- 200:
 		```ts
 		data: {
 			message: "Update product successfully",
+		},
+		```
+	- 400:
+		```ts
+		data: {
+			message: "Price must be greater than or equal to 0",
 		},
 		```
 	- 401:
@@ -722,34 +752,118 @@
 		},
 		```
 
-### Import warehouse
+### Create import bill
 
 [Back to top](#API-Documentation)
 
-- URL: https://quan-ly-kho-api.vercel.app/api/warehouses/import
+- URL: https://quan-ly-kho-api.vercel.app/api/bills/import
 - Method: POST
 - Header: Authorization: Bearer token-string
 - Body:
 	```json
 	{
-		"productId": "product-id",
-		"supplierId": "supplier-id",
-		"amount": 0
+		"code": "as93jsflas39jsaf",
+		"time": 1640141589028,
+		"data": [
+			{
+				"productId": "61c2928e6adb563b06390fb6",
+				"amount": 5
+			},
+			{
+				"productId": "61c291a76adb563b06390fa9",
+				"amount": 4
+			}
+		]
 	}
 	```
 - Response:
 	- 201:
 		```ts
 		data: {
-			message: "Import warehouse successfully",
-			importInformation: {
-				_id: "import-id",
-				productId: "product-id",
-				productName: "ABC",
-				supplierId: "supplier-id",
-				supplierName: "ABC",
-				amount: 0,
-			}
+  		message: "Import bill successfully",
+  		bill: {
+    		_id: "61c48c0f7623e2d09bd042b3",
+    		code: "as93jsflas39jsaf",
+    		time: 1640281589028,
+    		importWarehouse: [
+      		{
+        		_id: "61c48c0f7623e2d09bd042b0",
+		        product: {
+		          _id: "61c2928e6adb563b06390fb6",
+		          name: "Quýt",
+		          supplier: {
+		            _id: "61ac152e216107e9ec6a7033",
+		            name: "HP-Farm",
+		            deleted: false,
+		            __v: 0,
+		            address: "20 Lach Tray",
+		            phoneNumber: "01542788125"
+		          },
+		          price: 300000,
+		        },
+		        amount: 5
+		      },
+		      {
+		        _id: "61c48c0f7623e2d09bd042b1",
+		        product: {
+		          _id: "61c291a76adb563b06390fa9",
+		          name: "Táo",
+		          supplier: {
+		            _id: "61ac152e216107e9ec6a7033",
+		            name: "HP-Farm",
+		            deleted: false,
+		            __v: 0,
+		            address: "20 Lach Tray",
+		            phoneNumber: "01542788125"
+		          },
+		          price: 100000,
+		        },
+		        amount: 4
+		      }
+		    ]
+		  }
+		},
+		```
+	- 400:
+		```ts
+		data: {
+			message: "Code must be a string",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Time must be a number",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Data must be an array",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Code is required",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Time is required",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Data is required",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Data must be an array of objects",
 		},
 		```
 	- 401:
@@ -764,17 +878,291 @@
 			message: "Product not found",
 		},
 		```
+	- 409:
+		```ts
+		data: {
+			message: "Import bill already exists",
+		},
+		```
+
+### Get list of import bills
+
+[Back to top](#API-Documentation)
+
+- URL: https://quan-ly-kho-api.vercel.app/api/bills/import
+- Method: GET
+- Header: Authorization: Bearer token-string
+- Parameter:
+	- page: string
+	- limit: string
+- Response:
+	- 200:
+		```ts
+		data: {
+			bills: [
+				{
+					_id: "61c48c0f7623e2d09bd042b3",
+					code: "as93jsflas39jsaf",
+					time: 1640281589028,
+					importWarehouse: [
+						{
+							_id: "61c48c0f7623e2d09bd042b0",
+							product: {
+								_id: "61c2928e6adb563b06390fb6",
+								name: "Quýt",
+								supplier: {
+									_id: "61ac152e216107e9ec6a7033",
+									name: "HP-Farm",
+									deleted: false,
+									__v: 0,
+									address: "20 Lach Tray",
+									phoneNumber: "01542788125"
+								},
+								price: 300000,
+							},
+							amount: 5
+						},
+						{
+							_id: "61c48c0f7623e2d09bd042b1",
+							product: {
+								_id: "61c291a76adb563b06390fa9",
+								name: "Táo",
+								supplier: {
+									_id: "61ac152e216107e9ec6a7033",
+									name: "HP-Farm",
+									deleted: false,
+									__v: 0,
+									address: "20 Lach Tray",
+									phoneNumber: "01542788125"
+								},
+								price: 100000,
+							},
+							amount: 4
+						}
+					]
+				}
+			],
+			totalPage: 1
+			currentPage: 1,
+			totalBill: 2,
+		}
+		```
+
+### Create import bill
+
+[Back to top](#API-Documentation)
+
+- URL: https://quan-ly-kho-api.vercel.app/api/bills/import
+- Method: POST
+- Header: Authorization: Bearer token-string
+- Body:
+	```json
+	{
+		"code": "as93jsflas39jsaf",
+		"time": 1640141589028,
+		"email": "longngocdaugo.1202@gmail.com",
+		"data": [
+			{
+				"productId": "61c2928e6adb563b06390fb6",
+				"amount": 5
+			},
+			{
+				"productId": "61c291a76adb563b06390fa9",
+				"amount": 4
+			}
+		]
+	}
+	```
+- Response:
+	- 201:
+		```ts
+		data: {
+  		message: "Import bill successfully",
+  		bill: {
+    		_id: "61c48c0f7623e2d09bd042b3",
+    		code: "as93jsflas39jsaf",
+    		time: 1640281589028,
+				email: "longngocdaugo.1202@gmail.com",
+    		exportWarehouse: [
+      		{
+        		_id: "61c48c0f7623e2d09bd042b0",
+		        product: {
+		          _id: "61c2928e6adb563b06390fb6",
+		          name: "Quýt",
+		          supplier: {
+		            _id: "61ac152e216107e9ec6a7033",
+		            name: "HP-Farm",
+		            deleted: false,
+		            __v: 0,
+		            address: "20 Lach Tray",
+		            phoneNumber: "01542788125"
+		          },
+		          price: 300000,
+		        },
+		        amount: 5
+		      },
+		      {
+		        _id: "61c48c0f7623e2d09bd042b1",
+		        product: {
+		          _id: "61c291a76adb563b06390fa9",
+		          name: "Táo",
+		          supplier: {
+		            _id: "61ac152e216107e9ec6a7033",
+		            name: "HP-Farm",
+		            deleted: false,
+		            __v: 0,
+		            address: "20 Lach Tray",
+		            phoneNumber: "01542788125"
+		          },
+		          price: 100000,
+		        },
+		        amount: 4
+		      }
+		    ]
+		  }
+		},
+		```
+	- 400:
+		```ts
+		data: {
+			message: "Code must be a string",
+		},
+		```
 		or
 		```ts
 		data: {
-			message: "Supplier not found",
+			message: "Time must be a number",
 		},
 		```
-	- 500:
+		or
 		```ts
 		data: {
-			message: "Internal server error",
+			message: "Data must be an array",
 		},
+		```
+		or
+		```ts
+		data: {
+			message: "Email must be a string",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Code is required",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Time is required",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Data is required",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Email is required",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Email is invalid",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Data must be an array of objects",
+		},
+		```
+	- 401:
+		```ts
+		data: {
+			message: "Please login first",
+		},
+		```
+	- 404:
+		```ts
+		data: {
+			message: "Product not found",
+		},
+		```
+	- 409:
+		```ts
+		data: {
+			message: "Export bill already exists",
+		},
+		```
+
+### Get list of export bills
+
+[Back to top](#API-Documentation)
+
+- URL: https://quan-ly-kho-api.vercel.app/api/bills/export
+- Method: GET
+- Header: Authorization: Bearer token-string
+- Parameter:
+	- page: number
+	- limit: number
+- Response:
+	- 200:
+		```ts
+		data: {
+			bills: [
+				{
+					_id: "61c48c0f7623e2d09bd042b3",
+					code: "as93jsflas39jsaf",
+					time: 1640281589028,
+					email: "longngocdaugo.1202@gmail.com",
+					exportWarehouse: [
+						{
+							_id: "61c48c0f7623e2d09bd042b0",
+							product: {
+								_id: "61c2928e6adb563b06390fb6",
+								name: "Quýt",
+								supplier: {
+									_id: "61ac152e216107e9ec6a7033",
+									name: "HP-Farm",
+									deleted: false,
+									__v: 0,
+									address: "20 Lach Tray",
+									phoneNumber: "01542788125"
+								},
+								price: 300000,
+							},
+							amount: 5
+						},
+						{
+							_id: "61c48c0f7623e2d09bd042b1",
+							product: {
+								_id: "61c291a76adb563b06390fa9",
+								name: "Táo",
+								supplier: {
+									_id: "61ac152e216107e9ec6a7033",
+									name: "HP-Farm",
+									deleted: false,
+									__v: 0,
+									address: "20 Lach Tray",
+									phoneNumber: "01542788125",
+								},
+								price: 100000,
+							},
+							amount: 4
+						}
+					]
+				}
+			],
+			totalPage: 1,
+			currentPage: 1,
+			totalBill: 2,
+		}
 		```
 
 ### Get list of import warehouse
@@ -860,67 +1248,6 @@
 		```ts
 		data: {
 			message: "Please login first",
-		},
-		```
-	- 500:
-		```ts
-		data: {
-			message: "Internal server error",
-		},
-		```
-
-### Export warehouse
-
-[Back to top](#API-Documentation)
-
-- URL: https://quan-ly-kho-api.vercel.app/api/warehouses/export
-- Method: POST
-- Header: Authorization: Bearer token-string
-- Body:
-	```json
-	{
-		"productId": "product-id",
-		"supplierId": "supplier-id",
-		"amount": 0
-	}
-	```
-- Response:
-	- 201:
-		```ts
-		data: {
-			message: "Export warehouse successfully",
-			exportInformation: {
-				_id: "export-id",
-				productId: "product-id",
-				productName: "ABC",
-				supplierId: "supplier-id",
-				supplierName: "ABC",
-				amount: 0,
-			},
-		},
-		```
-	- 400:
-		```ts
-		data: {
-			message: "Amount is not enough",
-		},
-		```
-	- 401:
-		```ts
-		data: {
-			message: "Please login first",
-		},
-		```
-	- 404:
-		```ts
-		data: {
-			message: "Product not found",
-		},
-		```
-		or
-		```ts
-		data: {
-			message: "Supplier not found",
 		},
 		```
 	- 500:
