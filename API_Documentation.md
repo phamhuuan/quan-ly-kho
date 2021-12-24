@@ -4,7 +4,7 @@
 
 | Email                       | Password |
 | --------------------------- | -------- |
-| dataholicguy@gmail.com			| 12345678 |
+| dataholicguy@gmail.com      | 12345678 |
 | longngodaugo.1202@gmail.com | 12345678 |
 
 ## Base URL
