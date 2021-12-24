@@ -4,7 +4,7 @@
 
 | Email                       | Password |
 | --------------------------- | -------- |
-| dataholicguy@gmail.com      | 12345678 |
+| dataholicguy@gmail.com			| 12345678 |
 | longngodaugo.1202@gmail.com | 12345678 |
 
 ## Base URL
@@ -29,9 +29,9 @@
 | GET | /api/products/:id | [Get product](#Get-product) |
 | PATCH | /api/products/:id | [Update product](#Update-product) |
 | DELETE | /api/products/:id | [Delete product](#Delete-product) |
-| POST | /api/bills/import | [Create import bills](#Create-import-bills) |
+| POST | /api/bills/import | [Create import bill](#Create-import-bill) |
 | GET | /api/bills/import | [Get list of import bills](#Get-list-of-import-bills) |
-| POST | /api/bills/export | [Create export bills](#Create-export-bills) |
+| POST | /api/bills/export | [Create export bill](#Create-export-bill) |
 | GET | /api/bills/export | [Get list of export bills](#Get-list-of-export-bills) |
 | GET | /api/warehouses/import | [Get list of import warehouse](#Get-list-of-import-warehouse) |
 | GET | /api/warehouses/export | [Get list of export warehouse](#Get-list-of-export-warehouse) |
@@ -780,48 +780,48 @@
 	- 201:
 		```ts
 		data: {
-  		message: "Import bill successfully",
-  		bill: {
-    		_id: "61c48c0f7623e2d09bd042b3",
-    		code: "as93jsflas39jsaf",
-    		time: 1640281589028,
-    		importWarehouse: [
-      		{
-        		_id: "61c48c0f7623e2d09bd042b0",
-		        product: {
-		          _id: "61c2928e6adb563b06390fb6",
-		          name: "Quýt",
-		          supplier: {
-		            _id: "61ac152e216107e9ec6a7033",
-		            name: "HP-Farm",
-		            deleted: false,
-		            __v: 0,
-		            address: "20 Lach Tray",
-		            phoneNumber: "01542788125"
-		          },
-		          price: 300000,
-		        },
-		        amount: 5
-		      },
-		      {
-		        _id: "61c48c0f7623e2d09bd042b1",
-		        product: {
-		          _id: "61c291a76adb563b06390fa9",
-		          name: "Táo",
-		          supplier: {
-		            _id: "61ac152e216107e9ec6a7033",
-		            name: "HP-Farm",
-		            deleted: false,
-		            __v: 0,
-		            address: "20 Lach Tray",
-		            phoneNumber: "01542788125"
-		          },
-		          price: 100000,
-		        },
-		        amount: 4
-		      }
-		    ]
-		  }
+			message: "Import bill successfully",
+			bill: {
+				_id: "61c48c0f7623e2d09bd042b3",
+				code: "as93jsflas39jsaf",
+				time: 1640281589028,
+				importWarehouse: [
+					{
+						_id: "61c48c0f7623e2d09bd042b0",
+						product: {
+							_id: "61c2928e6adb563b06390fb6",
+							name: "Quýt",
+							supplier: {
+								_id: "61ac152e216107e9ec6a7033",
+								name: "HP-Farm",
+								deleted: false,
+								__v: 0,
+								address: "20 Lach Tray",
+								phoneNumber: "01542788125"
+							},
+							price: 300000,
+						},
+						amount: 5
+					},
+					{
+						_id: "61c48c0f7623e2d09bd042b1",
+						product: {
+							_id: "61c291a76adb563b06390fa9",
+							name: "Táo",
+							supplier: {
+								_id: "61ac152e216107e9ec6a7033",
+								name: "HP-Farm",
+								deleted: false,
+								__v: 0,
+								address: "20 Lach Tray",
+								phoneNumber: "01542788125"
+							},
+							price: 100000,
+						},
+						amount: 4
+					}
+				]
+			}
 		},
 		```
 	- 400:
@@ -948,11 +948,11 @@
 		}
 		```
 
-### Create import bill
+### Create export bill
 
 [Back to top](#API-Documentation)
 
-- URL: https://quan-ly-kho-api.vercel.app/api/bills/import
+- URL: https://quan-ly-kho-api.vercel.app/api/bills/export
 - Method: POST
 - Header: Authorization: Bearer token-string
 - Body:
@@ -977,49 +977,49 @@
 	- 201:
 		```ts
 		data: {
-  		message: "Import bill successfully",
-  		bill: {
-    		_id: "61c48c0f7623e2d09bd042b3",
-    		code: "as93jsflas39jsaf",
-    		time: 1640281589028,
+			message: "Import bill successfully",
+			bill: {
+				_id: "61c48c0f7623e2d09bd042b3",
+				code: "as93jsflas39jsaf",
+				time: 1640281589028,
 				email: "longngocdaugo.1202@gmail.com",
-    		exportWarehouse: [
-      		{
-        		_id: "61c48c0f7623e2d09bd042b0",
-		        product: {
-		          _id: "61c2928e6adb563b06390fb6",
-		          name: "Quýt",
-		          supplier: {
-		            _id: "61ac152e216107e9ec6a7033",
-		            name: "HP-Farm",
-		            deleted: false,
-		            __v: 0,
-		            address: "20 Lach Tray",
-		            phoneNumber: "01542788125"
-		          },
-		          price: 300000,
-		        },
-		        amount: 5
-		      },
-		      {
-		        _id: "61c48c0f7623e2d09bd042b1",
-		        product: {
-		          _id: "61c291a76adb563b06390fa9",
-		          name: "Táo",
-		          supplier: {
-		            _id: "61ac152e216107e9ec6a7033",
-		            name: "HP-Farm",
-		            deleted: false,
-		            __v: 0,
-		            address: "20 Lach Tray",
-		            phoneNumber: "01542788125"
-		          },
-		          price: 100000,
-		        },
-		        amount: 4
-		      }
-		    ]
-		  }
+				exportWarehouse: [
+					{
+						_id: "61c48c0f7623e2d09bd042b0",
+						product: {
+							_id: "61c2928e6adb563b06390fb6",
+							name: "Quýt",
+							supplier: {
+								_id: "61ac152e216107e9ec6a7033",
+								name: "HP-Farm",
+								deleted: false,
+								__v: 0,
+								address: "20 Lach Tray",
+								phoneNumber: "01542788125"
+							},
+							price: 300000,
+						},
+						amount: 5
+					},
+					{
+						_id: "61c48c0f7623e2d09bd042b1",
+						product: {
+							_id: "61c291a76adb563b06390fa9",
+							name: "Táo",
+							supplier: {
+								_id: "61ac152e216107e9ec6a7033",
+								name: "HP-Farm",
+								deleted: false,
+								__v: 0,
+								address: "20 Lach Tray",
+								phoneNumber: "01542788125"
+							},
+							price: 100000,
+						},
+						amount: 4
+					}
+				]
+			}
 		},
 		```
 	- 400:
