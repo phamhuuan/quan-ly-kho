@@ -4,7 +4,7 @@
 
 | Email                       | Password |
 | --------------------------- | -------- |
-| dataholicguy@gmail.com      | 12345678 |
+| dataholicguy@gmail.com			| 12345678 |
 | longngodaugo.1202@gmail.com | 12345678 |
 
 ## Base URL
@@ -35,6 +35,10 @@
 | GET | /api/bills/export | [Get list of export bills](#Get-list-of-export-bills) |
 | GET | /api/warehouses/import | [Get list of import warehouse](#Get-list-of-import-warehouse) |
 | GET | /api/warehouses/export | [Get list of export warehouse](#Get-list-of-export-warehouse) |
+| POST | /api/tools | [Create tool](#Create-tool) |
+| GET | /api/tools | [Get list of tools](#Get-list-of-tools) |
+| PATCH | /api/tools/:id | [Update tool](#Update-tool) |
+| DELETE | /api/tools/:id | [Delete tool](#Delete-tool) |
 
 ## Authentication
 
@@ -767,11 +771,13 @@
 		"data": [
 			{
 				"productId": "61c2928e6adb563b06390fb6",
-				"amount": 5
+				"amount": 5,
+				"price": 200000
 			},
 			{
 				"productId": "61c291a76adb563b06390fa9",
-				"amount": 4
+				"amount": 4,
+				"price": 200000
 			}
 		]
 	}
@@ -788,6 +794,14 @@
 				importWarehouse: [
 					{
 						_id: "61c48c0f7623e2d09bd042b0",
+						supplier: {
+							_id: "61ac152e216107e9ec6a7033",
+							name: "HP-Farm",
+							deleted: false,
+							__v: 0,
+							address: "20 Lach Tray",
+							phoneNumber: "01542788125"
+						},
 						product: {
 							_id: "61c2928e6adb563b06390fb6",
 							name: "Quýt",
@@ -799,8 +813,8 @@
 								address: "20 Lach Tray",
 								phoneNumber: "01542788125"
 							},
-							price: 300000,
 						},
+						price: 300000,
 						amount: 5
 					},
 					{
@@ -816,8 +830,8 @@
 								address: "20 Lach Tray",
 								phoneNumber: "01542788125"
 							},
-							price: 100000,
 						},
+						price: 100000,
 						amount: 4
 					}
 				]
@@ -904,6 +918,14 @@
 					_id: "61c48c0f7623e2d09bd042b3",
 					code: "as93jsflas39jsaf",
 					time: 1640281589028,
+					supplier: {
+						_id: "61ac152e216107e9ec6a7033",
+						name: "HP-Farm",
+						deleted: false,
+						__v: 0,
+						address: "20 Lach Tray",
+						phoneNumber: "01542788125"
+					},
 					importWarehouse: [
 						{
 							_id: "61c48c0f7623e2d09bd042b0",
@@ -964,11 +986,13 @@
 		"data": [
 			{
 				"productId": "61c2928e6adb563b06390fb6",
-				"amount": 5
+				"amount": 5,
+				"price": 300000
 			},
 			{
 				"productId": "61c291a76adb563b06390fa9",
-				"amount": 4
+				"amount": 4,
+				"price": 100000
 			}
 		]
 	}
@@ -977,12 +1001,13 @@
 	- 201:
 		```ts
 		data: {
-			message: "Import bill successfully",
+			message: "Export bill successfully",
 			bill: {
 				_id: "61c48c0f7623e2d09bd042b3",
 				code: "as93jsflas39jsaf",
 				time: 1640281589028,
 				email: "longngocdaugo.1202@gmail.com",
+				phone: "01542788125",
 				exportWarehouse: [
 					{
 						_id: "61c48c0f7623e2d09bd042b0",
@@ -997,8 +1022,8 @@
 								address: "20 Lach Tray",
 								phoneNumber: "01542788125"
 							},
-							price: 300000,
 						},
+						price: 300000,
 						amount: 5
 					},
 					{
@@ -1014,8 +1039,8 @@
 								address: "20 Lach Tray",
 								phoneNumber: "01542788125"
 							},
-							price: 100000,
 						},
+						price: 100000,
 						amount: 4
 					}
 				]
@@ -1074,6 +1099,12 @@
 		```ts
 		data: {
 			message: "Email is invalid",
+		},
+		```
+		or
+		```ts
+		data: {
+			message: "Phone is required",
 		},
 		```
 		or
@@ -1336,6 +1367,141 @@
 				},
 			],
 		},
+	- 401:
+		```ts
+		data: {
+			message: "Please login first",
+		},
+		```
+	- 500:
+		```ts
+		data: {
+			message: "Internal server error",
+		},
+		```
+
+### Create tool
+
+- URL: https://quan-ly-kho-api.vercel.app/api/tools
+- Method: POST
+- Header: Authorization: Bearer token-string
+- Body:
+	```json
+	{
+		"name": "ABC",
+		"amount": 0,
+		"time": 1637744085913
+	}
+	```
+- Response:
+	- 200:
+		```ts
+		data: {
+			message: "Create tool successfully",
+		},
+		```
+	- 401:
+		```ts
+		data: {
+			message: "Please login first",
+		},
+		```
+	- 500:
+		```ts
+		data: {
+			message: "Internal server error",
+		},
+		```
+
+### Get list of tools
+
+- URL: https://quan-ly-kho-api.vercel.app/api/tools
+- Method: GET
+- Header: Authorization: Bearer token-string
+- Response:
+	- 200:
+		```ts
+		data: {
+			tools: [
+				{
+					_id: "tool-id",
+					name: "ABC",
+					amount: 0,
+					time: 1637744085913,
+				},
+				{
+					_id: "tool-id",
+					name: "ABC",
+					amount: 0,
+					time: 1637744085913,
+				},
+			],
+		},
+		```
+	- 401:
+		```ts
+		data: {
+			message: "Please login first",
+		},
+		```
+	- 500:
+		```ts
+		data: {
+			message: "Internal server error",
+		},
+		```
+
+### Update tool
+
+- URL: https://quan-ly-kho-api.vercel.app/api/tools/:id
+- Method: PUT
+- Header: Authorization: Bearer token-string
+- Body:
+	```json
+	{
+		"name": "ABC",
+		"amount": 0,
+		"time": 1637744085913
+	}
+	```
+- Response:
+	- 200:
+		```ts
+		data: {
+			message: "Update tool successfully",
+			tool: {
+				_id: "tool-id",
+				name: "ABC",
+				amount: 0,
+				time: 1637744085913,
+			},
+		},
+		```
+	- 401:
+		```ts
+		data: {
+			message: "Please login first",
+		},
+		```
+	- 500:
+		```ts
+		data: {
+			message: "Internal server error",
+		},
+		```
+
+### Delete tool
+
+- URL: https://quan-ly-kho-api.vercel.app/api/tools/:id
+- Method: DELETE
+- Header: Authorization: Bearer token-string
+- Response:
+	- 200:
+		```ts
+		data: {
+			message: "Delete tool successfully",
+		},
+		```
 	- 401:
 		```ts
 		data: {
